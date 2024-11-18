@@ -1,12 +1,7 @@
 package to_do_atv2semestre.to_do_list.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+import lombok.*;
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -14,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class User {
 
     @Id
@@ -24,5 +20,7 @@ public class User {
     private String username;
 
     private String password;
+
+    private String token;
 
 }

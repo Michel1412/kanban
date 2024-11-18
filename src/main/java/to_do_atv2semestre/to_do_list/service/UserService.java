@@ -45,10 +45,7 @@ public class UserService {
         return new RecoveryJwtTokenDTO(jwtTokenService.generateToken(userDetails));
     }
 
-    // Método responsável por criar um usuário
-    public void createUser(LoginUserDTO dto) {
-
-        // Cria um novo usuário com os dados fornecidos
+    public User createUser(LoginUserDTO dto) {
         User newUser = User.builder()
                 .username(dto.getUsername())
                 // Codifica a senha do usuário com o algoritmo bcrypt
@@ -56,17 +53,33 @@ public class UserService {
                 .build();
 
         // Salva o novo usuário no banco de dados
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     public ResponseEntity<RecoveryJwtTokenDTO> login(LoginUserDTO dto) {
         var optUser = this.userRepository.findByUsername(dto.getUsername());
+        User user;
 
         if (optUser.isEmpty()) {
-            this.createUser(dto);
+            System.out.printf("Criando novo user para %s", dto.getUsername());
+            user = this.createUser(dto);
+            var token = this.authenticateUser(dto);
+
+            user.setToken(token.getToken());
+            this.userRepository.save(user);
+
+
+            return ResponseEntity.ok(token);
         }
 
-        var token = this.authenticateUser(dto);
-        return ResponseEntity.ok(token);
+        user = optUser.get();
+
+        if (user.getPassword().equals(securityConfiguration.passwordEncoder().encode(dto.getPassword()))) {
+            System.out.printf("Retornando ultimo token do usuario %s", dto.getUsername());
+            return ResponseEntity.ok(new RecoveryJwtTokenDTO(user.getToken()));
+        }
+
+        System.out.printf("Senha incorreta para o Usuario %s", dto.getUsername());
+        throw new SecurityException(String.format("Senha incorreta para o Usuario %s", dto.getUsername()));
     }
 }
