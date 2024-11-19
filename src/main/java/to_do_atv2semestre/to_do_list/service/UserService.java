@@ -74,7 +74,7 @@ public class UserService {
 
         user = optUser.get();
 
-        if (user.getPassword().equals(securityConfiguration.passwordEncoder().encode(dto.getPassword()))) {
+        if (securityConfiguration.passwordEncoder().matches(dto.getPassword(), user.getPassword())) {
             System.out.printf("Retornando ultimo token do usuario %s", dto.getUsername());
             return ResponseEntity.ok(new RecoveryJwtTokenDTO(user.getToken()));
         }

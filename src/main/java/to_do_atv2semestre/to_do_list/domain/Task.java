@@ -42,10 +42,6 @@ public class Task {
     private LocalDate due_date;
 
     public Task(CreateTaskDTO dto) {
-        if (dto.getTitle().isEmpty() || dto.getTitle().isBlank()) {
-            throw new IllegalArgumentException("É obrigatorio ter um Title");
-        }
-
         this.title = dto.getTitle();
         this.description = dto.getDescription();
         this.status = Status.A_Fazer;

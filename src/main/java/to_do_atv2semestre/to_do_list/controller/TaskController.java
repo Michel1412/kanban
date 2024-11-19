@@ -27,17 +27,17 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody CreateTaskDTO dto) {
+    public ResponseEntity<?> createTask(@RequestBody CreateTaskDTO dto) {
         return this.service.create(dto);
     }
 
     @PutMapping("/{id}/move")
-    public ResponseEntity<Task> moveTask(@PathVariable int id) {
+    public ResponseEntity<?> moveTask(@PathVariable int id) {
         return this.service.move(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateDetails(@PathVariable int id, @RequestBody UpdateTaskDTO dto) {
+    public ResponseEntity<?> updateDetails(@PathVariable int id, @RequestBody UpdateTaskDTO dto) {
         return this.service.update(id, dto);
     }
 
